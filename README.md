@@ -59,13 +59,14 @@ python main.py
 ```
 
 3. Optional Flags
-| Flag | Description |
-|------|-------------|
-| --content_image | Path to the content image |
-| --style_image   | Path to the style image |
-| --content_weight | Weight for content loss |
-| --style_weight | Weight for style loss |
-| --total_variation_weight | Weight for TV loss |
-| --optimizer | 'lbfgs' or 'adam' |
-| --model | 'vgg16' or 'vgg19' |
-| --init_method | 'content', 'style', or 'random' |
+
+| Flag                       | Default             | Description                                                                     |
+| -------------------------- | ------------------- | ------------------------------------------------------------------------------- |
+| `--content_image`          | `"golden_gate.jpg"` | Name of the content image                                                     |
+| `--style_image`            | `"vg_la_cafe.jpg"`  | Name of the style image                                                        |
+| `--content_weight`         | `1`                 | Weight factor for content loss                                                 |
+| `--style_weight`           | `1e6`               | Weight factor for style loss                                                 |
+| `--total_variation_weight` | `1e-6`              | Weight factor for total variation loss                                        |
+| `--optimizer`              | `'lbfgs'`           | `lbfgs`, `adam`                                |
+| `--model`                  | `'vgg19'`           | `vgg16`, `vgg19`                                |
+| `--init_method`            | `'random'`          | `content`, `style`, `random` |
