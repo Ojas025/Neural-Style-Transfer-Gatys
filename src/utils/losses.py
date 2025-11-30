@@ -21,8 +21,18 @@ def compute_style_loss(target_grams, current_grams):
     
     return style_loss
 
-def compute_total_variation(image):
-    pass
+def compute_total_variation(image, should_normalize=False):
+    (b, c, h, w) = image.size()
+    
+    row_wise_tv = torch.pow(image[:,:,1:,:] - image[:,:,:-1,:], 2).sum()
+    col_wise_tv = torch.pow(image[:,:,:,1:] - image[:,:,:,:-1], 2).sum()
+
+    total_variation_loss = row_wise_tv + col_wise_tv
+    
+    if should_normalize:
+        total_variation_loss /= (b*c*h*w)
+    
+    return total_variation_loss
 
 def compute_loss(image, current_feature_maps, style_layers, target_representations):
     current_content = current_feature_maps['relu4_2'].squeeze(0)
@@ -38,3 +48,5 @@ def compute_loss(image, current_feature_maps, style_layers, target_representatio
     
     # total weighted loss
     total_loss = (CONTENT_WEIGHT * content_loss) + (STYLE_WEIGHT * style_loss) + (TOTAL_VARIATION_WEIGHT * total_variation_loss)
+    
+    return total_loss, content_loss, style_loss, total_variation_loss
