@@ -19,9 +19,9 @@ A from-scratch, fully-modular PyTorch implementation based on the original paper
 ---
 
 ### Example Results
-| Content Image  | Style Image    | Stylized Output |
-| -------------- | -------------- | --------------- |
-| ![Green Bridge](./src/data/content-images/green_bridge.jpg) | ![Wave Crop](./src/data/style-images/wave_crop.jpg) | ![Stylized Image](./src/data/output/green_bridge_wave_crop.jpg)  |
+| Content Image | Style Image | Stylized Output |
+| ------------- | ----------- | --------------- |
+| <img src="./src/data/content-images/green_bridge.jpg" width="200"> | <img src="./src/data/style-images/wave_crop.jpg" width="200"> | <img src="./src/data/output/green_bridge_wave_crop.jpg" width="200"> |
 
 ---
 
@@ -59,11 +59,13 @@ python main.py
 ```
 
 3. Optional Flags
-* **`--content_image`** — Path to the image whose structural content is preserved in the stylized output.
-* **`--style_image`** — Path to the image providing stylistic features applied to the stylized output.
-* **`--content_weight`** — Controls how strongly content structure influences the final stylized image.
-* **`--style_weight`** — Controls the intensity and dominance of style features in the stylized result.
-* **`--total_variation_weight`** — Regularization weight that smooths the stylized output and reduces noise.
-* **`--optimizer`** *(`lbfgs`, `adam`)* — Optimization algorithm used to iteratively refine the stylized image.
-* **`--model`** *(`vgg16`, `vgg19`)* — VGG backbone used as the fixed feature extractor for content and style features.
-* **`--init_method`** *(`content`, `style`, `random`)* — Initialization strategy for constructing the starting point of the stylized image.
+| Flag | Description |
+|------|-------------|
+| --content_image | Path to the content image |
+| --style_image   | Path to the style image |
+| --content_weight | Weight for content loss |
+| --style_weight | Weight for style loss |
+| --total_variation_weight | Weight for TV loss |
+| --optimizer | 'lbfgs' or 'adam' |
+| --model | 'vgg16' or 'vgg19' |
+| --init_method | 'content', 'style', or 'random' |
