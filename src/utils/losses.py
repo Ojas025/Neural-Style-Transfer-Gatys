@@ -2,11 +2,9 @@ import torch.nn as nn
 
 from utils.model import *
 
-CONTENT_WEIGHT = 1
-STYLE_WEIGHT = 1e6
-TOTAL_VARIATION_WEIGHT = 1e-4
-
 def compute_content_loss(target, current):
+    # print("Target size", target.size())
+    # print("Current size", current.size())
     content_loss = nn.MSELoss(reduction='mean')(target, current)
     
     return content_loss
@@ -34,7 +32,7 @@ def compute_total_variation(image, should_normalize=False):
     
     return total_variation_loss
 
-def compute_loss(image, current_feature_maps, style_layers, target_representations):
+def compute_loss(image, current_feature_maps, style_layers, target_representations, weights):
     current_content = current_feature_maps['relu4_2'].squeeze(0)
     current_style_maps = [
         gram_matrix(current_feature_maps[layer])
@@ -47,6 +45,6 @@ def compute_loss(image, current_feature_maps, style_layers, target_representatio
     total_variation_loss = compute_total_variation(image)
     
     # total weighted loss
-    total_loss = (CONTENT_WEIGHT * content_loss) + (STYLE_WEIGHT * style_loss) + (TOTAL_VARIATION_WEIGHT * total_variation_loss)
+    total_loss = (weights[0] * content_loss) + (weights[1] * style_loss) + (weights[2] * total_variation_loss)
     
     return total_loss, content_loss, style_loss, total_variation_loss

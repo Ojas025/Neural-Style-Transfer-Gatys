@@ -31,7 +31,9 @@ def resize_image(image, size):
 def prepare_image(path, device, size):
     image = load_image(path)
     
-    image, h, w = resize_image(image, size)
+    # image, h, w = resize_image(image, size)
+    
+    image = image.resize((size[1],size[0]), Image.LANCZOS)
     
     transform = transforms.Compose([
         transforms.ToTensor(),
@@ -45,32 +47,39 @@ def prepare_image(path, device, size):
     image = image.to(device)
     image = image.unsqueeze(0)
     
-    return image, (h, w)
+    return image
 
 def save_image(image, path):
     # remove batch dimension
     image = image.squeeze(0)
     
-    device = image.device
+    image = image.detach().cpu().float()
     
-    std = torch.tensor(IMAGENET_STD, device=device).view(3,1,1)
-    mean = torch.tensor(IMAGENET_MEAN, device=device).view(3,1,1)
+    std = torch.tensor(IMAGENET_STD).view(3,1,1)
+    mean = torch.tensor(IMAGENET_MEAN).view(3,1,1)
     
     image = image * std + mean
     
     image = torch.clamp(image, 0, 1)
     
     # [C,H,W] -> [H,W,C]
-    image = image.permute(1, 2, 0)
+    # print("image size: ", image.size())
+    
+    # image = image.permute(1, 2, 0).contiguous()
+    
+    # print("image size post permute: ", image.size())
+    # print(image.size())
+    
+    # image = (image * 255.0).byte()
 
     image = transforms.ToPILImage()(image)
     
-    os.makedirs('../data/output', exist_ok=True)
-    image.save(os.path.join('../data/output', path))
+    os.makedirs('./data/output', exist_ok=True)
+    image.save(os.path.join('./data/output', path))
 
 def get_init_image(init_method, content_image, style_image, size, device):
     if init_method == 'random':
-        image = torch.randn([1, 3, size[0], size[1]], device=device, requires_grad=True, dtype=torch.float32) * 90.0
+        image = torch.randn([1, 3, size[0], size[1]], device=device, requires_grad=True, dtype=torch.float32) * 0.5
     elif init_method == 'content':
         image = content_image.clone().detach().requires_grad_(True)
     else:
